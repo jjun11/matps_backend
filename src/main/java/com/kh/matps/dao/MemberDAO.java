@@ -13,8 +13,8 @@ public class MemberDAO {
     private ResultSet rs = null;
     private PreparedStatement pStmt = null;
 
-    // id 회원 가입 여부 확인
-    public boolean regMemberCheck(String id) {
+    // id 중복 여부 확인
+    public boolean regMemberCheckId(String id) {
         System.out.println("DAO 진입 전 회원 가입 여부 확인 ID : " + id);
         boolean isNotReg = false; // 가입 여부를 담을 변수
         try { // DB 연결
@@ -24,6 +24,32 @@ public class MemberDAO {
             String sql = "SELECT * FROM CUSTOMER_TB WHERE MY_ID = " + "'" + id +"'"; // 쿼리문 작성
             rs = stmt.executeQuery(sql); // 쿼리문 수행 결과를 rs에 저장
             System.out.println("INPUT_ID : " + id);
+            if(rs.next()) isNotReg = false;
+            else isNotReg = true;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(rs);
+        Common.close(stmt);
+        Common.close(conn);
+        System.out.println("TRUE");
+        System.out.println("what");
+        System.out.println("FALSE");
+        System.out.println(isNotReg);
+        return isNotReg; // 가입 되어 있으면 false, 가입이 안되어 있으면 true
+    }
+
+    // 닉네임 중복 여부 확인
+    public boolean regMemberCheckNick(String nick) {
+        System.out.println("DAO 진입 전 회원 가입 여부 확인 NICK : " + nick);
+        boolean isNotReg = false; // 가입 여부를 담을 변수
+        try { // DB 연결
+            System.out.println("DAO 진입 회원 가입 여부 확인 NICK : " + nick);
+            conn = Common.getConnection();  // Common 클래스의 getConnection 메소드를 호출하여 DB 연결
+            stmt = conn.createStatement(); // Statement 객체 얻기
+            String sql = "SELECT * FROM CUSTOMER_TB WHERE MY_NICKNAME = " + "'" + nick +"'"; // 쿼리문 작성
+            rs = stmt.executeQuery(sql); // 쿼리문 수행 결과를 rs에 저장
+            System.out.println("INPUT_NICKNAME : " + nick);
             if(rs.next()) isNotReg = false;
             else isNotReg = true;
         } catch(Exception e) {
@@ -115,7 +141,7 @@ public class MemberDAO {
     // 회원 가입
     public boolean memberRegister(String id, String pwd, String mail, String name, String nick, String gender) {
         int result = 0;
-        String sql = "INSERT INTO CUSTOMER_TB(MY_ID, MY_PWD,MY_EMAIL, MY_NAME, MY_NICKNAME, MY_GENDER) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO CUSTOMER_TB(MY_ID, MY_PW, MY_EMAIL, MY_NAME, MY_NICKNAME, MY_GENDER) VALUES(?, ?, ?, ?, ?, ?)";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);

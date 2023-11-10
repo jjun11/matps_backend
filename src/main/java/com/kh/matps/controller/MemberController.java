@@ -39,15 +39,27 @@ public class MemberController {
 
     }
 
-    // GET : 가입 여부 확인
-    @GetMapping("/check") // @GetMapping 어노테이션은 GET 방식의 요청을 처리한다.
-    public ResponseEntity<Boolean> memberCheck(@RequestParam String id) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
+    // GET : ID 중복 여부 확인
+    @GetMapping("/checkId") // @GetMapping 어노테이션은 GET 방식의 요청을 처리한다.
+    public ResponseEntity<Boolean> memberCheckId(@RequestParam String id) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
         System.out.println("회원 가입 여부 확인 ID : " + id); // 콘솔에 가입 여부 확인을 위한 아이디를 출력한다.
         MemberDAO dao = new MemberDAO(); // MemberDAO 객체를 생성\
-        boolean isTrue = dao.regMemberCheck(id); // MemberDAO 객체의 regMemberCheck 메소드 내 id를 인자로 전달하여 회원 가입 여부를 확인한다.
+        boolean isTrue = dao.regMemberCheckId(id); // MemberDAO 객체의 regMemberCheck 메소드 내 id를 인자로 전달하여 회원 가입 여부를 확인한다.
         return new ResponseEntity<>(isTrue, HttpStatus.OK); // 확인된 결과를 ResponseEntity에 담아 반환한다.
 
+
       }
+
+    // GET : 닉네임 중복 여부 확인
+    @GetMapping("/checkNick") // @GetMapping 어노테이션은 GET 방식의 요청을 처리한다.
+    public ResponseEntity<Boolean> memberCheckNick  (@RequestParam String nick) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
+        System.out.println("회원 가입 여부 확인 NICK : " + nick); // 콘솔에 가입 여부 확인을 위한 닉네임을 출력한다.
+        MemberDAO dao = new MemberDAO(); // MemberDAO 객체를 생성\
+        boolean isTrue = dao.regMemberCheckNick(nick); // MemberDAO 객체의 regMemberCheck 메소드 내 nick를 인자로 전달하여 회원 가입 여부를 확인한다.
+        return new ResponseEntity<>(isTrue, HttpStatus.OK); // 확인된 결과를 ResponseEntity에 담아 반환한다.
+
+
+    }
 
     // POST : 회원 가입
     @PostMapping("/sign") // @PostMapping 어노테이션은 POST 방식의 요청을 처리한다.

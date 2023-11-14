@@ -13,6 +13,7 @@ public class MemberVO {
     private String my_gender;
     private String my_name;
     private String my_nickname;
+    private String my_profile_img;
 
     public String getMy_id() {
         return my_id;
@@ -69,6 +70,4 @@ public class MemberVO {
     public void setMy_profile_img(String my_profile_img) {
         this.my_profile_img = my_profile_img;
     }
-
-    private String my_profile_img;
 }

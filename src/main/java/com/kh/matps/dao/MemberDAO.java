@@ -101,7 +101,7 @@ public class MemberDAO {
     public List<MemberVO> memberSelect(String getName) {
         List<MemberVO> list = new ArrayList<>();
         String sql = null;
-        System.out.println("NAME : " + getName);
+        System.out.println("memberSelect - NAME : " + getName);
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
@@ -111,7 +111,7 @@ public class MemberDAO {
 
             while(rs.next()) {
                 String id = rs.getString("MY_ID");
-                String pwd = rs.getString("MY_PWD");
+                String pwd = rs.getString("MY_PW");
                 String mail = rs.getString("MY_EMAIL");
                 String name = rs.getString("MY_NAME");
                 String nick = rs.getString("MY_NICKNAME");
@@ -139,9 +139,9 @@ public class MemberDAO {
     }
 
     // 회원 가입
-    public boolean memberRegister(String id, String pwd, String mail, String name, String nick, String gender) {
+    public boolean memberRegister(String id, String pwd, String mail, String name, String nick, String gender, String profile_img) {
         int result = 0;
-        String sql = "INSERT INTO CUSTOMER_TB(MY_ID, MY_PW, MY_EMAIL, MY_NAME, MY_NICKNAME, MY_GENDER) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO CUSTOMER_TB(MY_ID, MY_PW, MY_EMAIL, MY_NAME, MY_NICKNAME, MY_GENDER, MY_PROFILE_IMG) VALUES(?, ?, ?, ?, ?, ?, ?)";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
@@ -151,6 +151,7 @@ public class MemberDAO {
             pStmt.setString(4, name);
             pStmt.setString(5, nick);
             pStmt.setString(6, gender);
+            pStmt.setString(7, profile_img);
             result = pStmt.executeUpdate();
             System.out.println("회원 가입 DB 결과 확인 : " + result);
 
@@ -164,6 +165,32 @@ public class MemberDAO {
         else return false;
     }
 
+    // 회원 정보 수정
+    public boolean memberUpdate(String id, String nick, String profile_img) {
+        int result = 0;
+        String sql = "UPDATE CUSTOMER_TB SET MY_NICKNAME = ?, MY_PROFILE_IMG = ? WHERE MY_ID = ?";
+        System.out.println("멤버업데이트");
+        System.out.println("id : " + id + "nick : " + nick + "profile_img : " + profile_img);
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, nick);
+            pStmt.setString(2, profile_img);
+            pStmt.setString(3, id);
+            result = pStmt.executeUpdate();
+            System.out.println("회원 정보 수정 DB 결과 확인 : " + result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+
+        if(result == 1) return true;
+        else return false;
+    }
+
+    //회원 탈퇴
     public boolean memberDelete(String id) {
         int result = 0;
         String sql = "DELETE FROM CUSTOMER_TB WHERE MY_ID = ?";

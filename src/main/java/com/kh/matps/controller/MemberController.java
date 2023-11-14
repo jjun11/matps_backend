@@ -19,10 +19,10 @@ public class MemberController {
 
     // GET : 회원 조회
     @GetMapping("/member") // @GetMapping 어노테이션은 GET 방식의 요청을 처리한다.
-    public ResponseEntity<List<MemberVO>> memberList(@RequestParam String name) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
-        System.out.println("NAME : " + name); // 콘솔에 이름을 출력한다.
+    public ResponseEntity<List<MemberVO>> memberList(@RequestParam String id) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
+        System.out.println("/member - ID : " + id); // 콘솔에 이름을 출력한다.
         MemberDAO dao = new MemberDAO(); // MemberDAO 객체를 생성하여 회원 조회를 수행한다.
-        List<MemberVO> list = dao.memberSelect(name); // MemberDAO 객체의 memberSelect 메소드를 호출한다.
+        List<MemberVO> list = dao.memberSelect(id); // MemberDAO 객체의 memberSelect 메소드를 호출한다.
         return new ResponseEntity<>(list, HttpStatus.OK); // 조회된 회원 목록을 ResponseEntity에 담아 반환한다.
     }
 
@@ -71,9 +71,25 @@ public class MemberController {
         String getName = regData.get("name");  // 회원 가입 데이터에서 name을 추출해서 getName 변수에 저장한다.
         String getNick = regData.get("nick"); // 회원 가입 데이터에서 nick을 추출해서 getNick 변수에 저장한다.
         String getGender = regData.get("gender"); // 회원 가입 데이터에서 gender을 추출해서 getGender 변수에 저장한다.
+        String getProfileImg = regData.get("profile_img"); // 회원 가입 데이터에서 profile_img을 추출해서 getProfileImg 변수에 저장한다.
         // MemberDAO 객체를 생성하여 회원 가입을 수행한다.
         MemberDAO dao = new MemberDAO();
-        boolean isTrue = dao.memberRegister(getId, getPwd, getMail, getName, getNick, getGender); // MemberDAO 객체의 memberRegister 메소드의 getId, getPwd, getMail, getName, getNick, getGender를 인자로 전달하여 회원 가입을 수행한다.
+        boolean isTrue = dao.memberRegister(getId, getPwd, getMail, getName, getNick, getGender, getProfileImg); // MemberDAO 객체의 memberRegister 메소드의 getId, getPwd, getMail, getName, getNick, getGender를 인자로 전달하여 회원 가입을 수행한다.
+        // 회원 가입 결과를 ResponseEntity에 담아 반환한다.
+        return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+
+    // POST : 회원 정보 수정
+    @PostMapping("/update") // @PostMapping 어노테이션은 POST 방식의 요청을 처리한다.
+    public ResponseEntity<Boolean> memberUpdate(@RequestBody Map<String, String> regData) { // @RequestBody 어노테이션은 요청 본문에 담긴 데이터를 메소드의 파라미터로 전달한다.
+        // 전송된 회원 가입 데이터에서 필요한 정보를 추출한다.
+        System.out.println("회원정보수정");
+        String getId = regData.get("id"); // 회원 가입 데이터에서 id를 추출해서 getId 변수에 저장한다.
+        String getNick = regData.get("nick"); // 회원 가입 데이터에서 nick을 추출해서 getNick 변수에 저장한다.
+        String getProfileImg = regData.get("profile_img"); // 회원 가입 데이터에서 profile_img을 추출해서 getProfileImg 변수에 저장한다.
+        // MemberDAO 객체를 생성하여 회원 가입을 수행한다.
+        MemberDAO dao = new MemberDAO();
+        boolean isTrue = dao.memberUpdate(getId, getNick, getProfileImg); // MemberDAO 객체의 memberRegister 메소드의 getId, getPwd, getMail, getName, getNick, getGender를 인자로 전달하여 회원 가입을 수행한다.
         // 회원 가입 결과를 ResponseEntity에 담아 반환한다.
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
     }

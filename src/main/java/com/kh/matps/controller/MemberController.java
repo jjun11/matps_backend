@@ -3,6 +3,7 @@ package com.kh.matps.controller;
 
 import com.kh.matps.dao.MemberDAO;
 import com.kh.matps.vo.MemberVO;
+import com.kh.matps.vo.ReviewVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -104,5 +105,15 @@ public class MemberController {
         boolean isTrue = dao.memberDelete(getId); // MemberDAO 객체의 memberDelete 메소드의 getId를 인자로 전달하여 회원 탈퇴를 수행한다.
         // 회원 탈퇴 결과를 ResponseEntity에 담아 반환한다.
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+
+    // GET : 내가 쓴 리뷰 조회
+    @GetMapping("/review") // @GetMapping 어노테이션은 GET 방식의 요청을 처리한다.
+    public ResponseEntity<List<ReviewVO>> memberReview(@RequestParam String nick) { // @RequestParam 어노테이션은 요청 파라미터의 값을 메소드의 파라미터로 전달한다.
+        System.out.println("리뷰 조회 닉네임 확인 : " + nick); // 콘솔에 작성 리뷰 확인을 위한 아이디를 출력한다.
+        MemberDAO dao = new MemberDAO(); // MemberDAO 객체를 생성\
+        List<ReviewVO> list = dao.reviewRegister(nick); // ReviewDAO 객체의 reviewRegister 메소드 내 nick를 인자로 전달하여 작성 리뷰를 확인한다.
+        System.out.println("리뷰 조회 결과 확인 : " + list); // 콘솔에 작성 리뷰 조회 결과를 출력한다.
+        return new ResponseEntity<>(list, HttpStatus.OK); // 확인된 결과를 ResponseEntity에 담아 반환한다.
     }
 }

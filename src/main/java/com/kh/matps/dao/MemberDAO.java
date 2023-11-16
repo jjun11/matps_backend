@@ -2,6 +2,7 @@ package com.kh.matps.dao;
 
 import com.kh.matps.common.Common;
 import com.kh.matps.vo.MemberVO;
+import com.kh.matps.vo.ReviewVO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ public class MemberDAO {
             String sql = "SELECT * FROM CUSTOMER_TB WHERE MY_ID = " + "'" + id +"'"; // 쿼리문 작성
             rs = stmt.executeQuery(sql); // 쿼리문 수행 결과를 rs에 저장
             System.out.println("INPUT_ID : " + id);
-            if(rs.next()) isNotReg = false;
-            else isNotReg = true;
-        } catch(Exception e) {
-            e.printStackTrace();
+            if(rs.next()) isNotReg = false; // 쿼리문 수행 결과가 있으면 false
+            else isNotReg = true; // 쿼리문 수행 결과가 없으면 true
+        } catch(Exception e) { // 예외 처리
+            e.printStackTrace(); // 예외 메시지 출력
         }
         Common.close(rs);
         Common.close(stmt);
@@ -119,15 +120,15 @@ public class MemberDAO {
                 String profile_img = rs.getString("MY_PROFILE_IMG");
 
 
-                MemberVO vo = new MemberVO();
-                vo.setMy_id(id);
-                vo.setMy_pw(pwd);
-                vo.setMy_email(mail);
-                vo.setMy_name(name);
-                vo.setMy_nickname(nick);
-                vo.setMy_gender(gender);
-                vo.setMy_profile_img(profile_img);
-                list.add(vo);
+                MemberVO vo = new MemberVO(); // MemberVO 객체 생성
+                vo.setMy_id(id); // MemberVO 객체에 id 저장
+                vo.setMy_pw(pwd); // MemberVO 객체에 pwd 저장
+                vo.setMy_email(mail); // MemberVO 객체에 mail 저장
+                vo.setMy_name(name); // MemberVO 객체에 name 저장
+                vo.setMy_nickname(nick); // MemberVO 객체에 nick 저장
+                vo.setMy_gender(gender); // MemberVO 객체에 gender  저장
+                vo.setMy_profile_img(profile_img); // MemberVO 객체에 profile_img 저장
+                list.add(vo); // 리스트에 추가
             }
             Common.close(rs);
             Common.close(stmt);
@@ -209,4 +210,52 @@ public class MemberDAO {
         else return false;
     }
 
+    // 내가 쓴 리뷰 조회
+    public List<ReviewVO> reviewRegister(String getNick) {
+        List<ReviewVO> list = new ArrayList<>();
+        String sql = null;
+        System.out.println("리뷰 조회 시도 ID : " + getNick);
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            sql = "SELECT * FROM REVIEW_TB WHERE USER_NICKNAME = " + "'" + getNick + "'"; // 리뷰테이블에서 MY_ID 가 nick 인 모든것을 조회
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                String id = rs.getString("REVIEW_ID");
+                String profile_img = rs.getString("USER_PROFILE_IMG");
+                String nick = rs.getString("USER_NICKNAME");
+                String date = rs.getString("REVIEW_DATE");
+                String score = rs.getString("REVIEW_SCORE");
+                String text = rs.getString("REVIEW_TEXT");
+                String img_01 = rs.getString("REVIEW_IMG_01");
+                String img_02 = rs.getString("REVIEW_IMG_02");
+                String img_03 = rs.getString("REVIEW_IMG_03");
+                String img_04 = rs.getString("REVIEW_IMG_04");
+                String img_05 = rs.getString("REVIEW_IMG_05");
+                String storeName = rs.getString("STORE_NAME");
+
+                ReviewVO vo = new ReviewVO();
+                vo.setReview_id(id);
+                vo.setUser_profile_img(profile_img);
+                vo.setUser_nickname(nick);
+                vo.setReview_date(date);
+                vo.setReview_score(score);
+                vo.setReview_text(text);
+                vo.setReview_img01(img_01);
+                vo.setReview_img02(img_02);
+                vo.setReview_img03(img_03);
+                vo.setReview_img04(img_04);
+                vo.setReview_img05(img_05);
+                vo.setStore_name(storeName);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
